@@ -53,6 +53,8 @@ gem 'pg'
 # needed by Heroku for logging
 gem 'rails_12factor', group: :production
 
+# auth
+gem 'devise'
 # manage env
 gem 'dotenv-rails'
 
