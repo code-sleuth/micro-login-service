@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-  # validates :roles, presence: true
   # validates :password, required: false
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
