@@ -29,6 +29,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'factory_bot_rails', '~> 4.0'
   gem 'rspec-rails', '~> 3.7'
   gem 'rubocop', '~> 0.50.0', require: false
 end
@@ -41,7 +42,6 @@ group :development do
 end
 
 group :test do
-  gem 'factory_bot_rails', '~> 4.0'
   gem 'shoulda-matchers', '~> 3.1'
   gem 'faker'
   gem 'database_cleaner'
@@ -49,6 +49,8 @@ end
 
 # Use pg as the database for Active Record
 gem 'pg'
+
+gem "pundit"
 
 # needed by Heroku for logging
 gem 'rails_12factor', group: :production
