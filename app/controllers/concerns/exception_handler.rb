@@ -4,11 +4,11 @@ module ExceptionHandler
 
   included do
     rescue_from ActiveRecord::RecordNotFound do |e|
-      json_response({ message: "Couldn't find user" }, :not_found)
+      json_response({ message: e.message.error }, e.message.status)
     end
 
-    rescue_from ActiveRecord::RecordInvalid do
-      json_response({ message: "Invalid JSON" }, :bad_request)
+    rescue_from ActiveRecord::RecordInvalid do |e|
+      json_response({ message: e.message.error }, e.message.status)
     end
   end
 end
