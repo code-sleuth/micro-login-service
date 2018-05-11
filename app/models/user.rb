@@ -20,12 +20,14 @@ class User < ApplicationRecord
   end
 
   def generate_confirmation_instructions
-    self.confirmation_token = SecureRandom.hex(64)
+    self.confirmation_token = SecureRandom.hex(64).to_s
     self.confirmation_sent_at = Time.now.utc
   end
 
-  def confirmation_token_valid?
-    (self.confirmation_sent_at + 30.days) > Time.now.utc
+  def confirmation_token_valid?(token)
+    candidate = Digest::SHA512.hexdigest(token)
+    (self.confirmation_sent_at + 24.hours) > Time.now.utc &&
+    self.confirmation_token == candidate
   end
 
   def mark_as_confirmed!
@@ -33,4 +35,10 @@ class User < ApplicationRecord
     self.confirmed_at = Time.now.utc
     save
   end
+
+  def reset_password!(password)
+    self.password = password
+    save!
+  end
+
 end

@@ -7,5 +7,8 @@ Rails.application.routes.draw do
     end
   end
 
+  post 'password/forgot', to: 'passwords#forgot'
+  post 'password/reset', to: 'passwords#reset'
+
   resources :invites, only: [:index, :create]
 end

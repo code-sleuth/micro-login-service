@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :authenticate_request!, except: [:login]
   before_action :set_user, only: [:show, :update, :destroy]
 
   def index
@@ -9,18 +10,19 @@ class UsersController < ApplicationController
   def create
     response = { skiped:[], created:[] }
 
+    if not role_exists?
+      json_response({message: "Role doesn't exist"}, :bad_request) and return
+    end
+
     user_params['emails'].each do |email|
 
       password = SecureRandom.hex(32)
-
       user = User.new(email: email, password: password,
         password_confirmation: password)
 
       if user.save!
-        token = user.confirmation_token
-        user.confirmation_token = BCrypt::Password.create token
-        user.save
-        UserMailer.with(user: user, token: token).invitation_mail.deliver_later
+        set_role(user)
+        generate_and_send_token_to(user)
         response[:created] << email
       else
         response[:skiped] << email
@@ -47,16 +49,18 @@ class UsersController < ApplicationController
   def login
     user = User.find_by_email(params[:email].to_s.downcase)
 
-    if user && user.authenticate(params[:password])
+    if user && user.authenticate(params[:password].to_s)
 
       if user.confirmed_at?
         auth_token = JsonWebToken.encode({ user_id: user.id,
           email: user.email,
-          role: user.role,
+          role: user.roles,
         })
         json_response(auth_token: auth_token)
       else
         json_response({ error: "Email not Verified" }, :unauthorized)
+      end
+
     else
       json_response({ error: "Invalid email / password" }, :unauthorized)
     end
@@ -70,5 +74,20 @@ class UsersController < ApplicationController
 
   def set_user
     @user = User.find(params[:id])
+  end
+
+  def role_exists?
+    role = Role.find_by_name(user_params['role'])
+    if role.blank?
+      false
+    else
+      true
+    end
+  end
+
+
+  def set_role(user)
+    role = Role.find_by_name(user_params['role'])
+    user.assignments.create(role: role)
   end
 end
