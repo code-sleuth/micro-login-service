@@ -25,12 +25,14 @@ module UsersHelper
       user = User.new(email: email, password: password,
         password_confirmation: password)
 
-      if user.save!
+      begin
+        user.save!
         set_role(user)
         generate_and_send_token_to(user)
         response[:created] << email
-      else
+      rescue
         response[:skiped] << email
+        next
       end
     end
     response

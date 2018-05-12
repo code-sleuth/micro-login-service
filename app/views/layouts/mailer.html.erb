@@ -97,22 +97,23 @@
 					<table data-module="module-6" data-thumb="thumbnails/06.png" width="100%" cellpadding="0" cellspacing="0">
 						<tr>
 							<td data-bgcolor="bg-module" bgcolor="#eaeced">
-								<table class="flexible" width="600" align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
+								<table class="flexible" width="600" align="center" style="margin:3em auto;" cellpadding="0" cellspacing="0">
 									<tr>
 										<td data-bgcolor="bg-block" class="holder" style="padding:64px 60px 50px;" bgcolor="#f9f9f9">
 											<table width="100%" cellpadding="0" cellspacing="0">
 												<tr>
 													<td data-color="title" data-size="size title" data-min="20" data-max="40" data-link-color="link title color" data-link-style="text-decoration:none; color:#292c34;" class="title" align="center" style="font:30px/33px Arial, Helvetica, sans-serif; color:#292c34; padding:0 0 23px;">
-                          <%= image_tag "loginLogo.svg", style:
-                              "vertical-align:top;vertical-align: top;
-                              height: 100px;
-                              width: 100px;
-                              border-radius: 5px;", alt:"Andela logo" %>
+                          								<a href="andela.com"><%= image_tag "https://3xyh3sqxv063a8xzo5uk2zn1-wpengine.netdna-ssl.com/wp-content/uploads/2016/01/Andela-logo-landscape-blue-400px.png",
+														style:
+															"vertical-align:top;vertical-align: top;
+															height: 100px;
+															border-radius: 5px;", alt:"Andela logo" %>
+														</a>
 													</td>
 												</tr>
 												<tr>
 													<td data-color="text" data-size="size text" data-min="10" data-max="26" data-link-color="link text color" data-link-style="font-weight:bold; text-decoration:underline; color:#40aceb;" align="center" style="font:16px/29px Arial, Helvetica, sans-serif; color:#888; padding:0 0 21px;">
-                            Hi <% @user.email.split('@').first %>
+                            						Hi <%= @user.email.split('@').first %>
 														<%=yield %>
 													</td>
 												</tr>
@@ -121,7 +122,7 @@
 														<table width="232" align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
 															<tr>
 																<td data-bgcolor="bg-button" data-size="size button" data-min="10" data-max="20" class="btn" align="center" style="font:bold 16px/18px Arial, Helvetica, sans-serif; color:#f9f9f9; text-transform:uppercase; mso-padding-alt:22px 10px; border-radius:3px;" bgcolor="#3458df">
-																	<a target="_blank" style="text-decoration:none; color:#f9f9f9; display:block; padding:22px 10px;" href="#">Link</a>
+                                  								<%= link_to "Link", @url, target: "_blank", style: "text-decoration:none; color:#f9f9f9; display:block; padding:22px 10px;" %>
 																</td>
 															</tr>
 														</table>
@@ -135,6 +136,34 @@
 							</td>
 						</tr>
 					</table>
+					<%# Module seven %>
+					<table data-module="module-7" data-thumb="thumbnails/07.png" width="100%" cellpadding="0" cellspacing="0">
+						<tr>
+							<td data-bgcolor="bg-module" bgcolor="#eaeced">
+								<table class="flexible" width="600" align="center" style="margin:0 auto;" cellpadding="0" cellspacing="0">
+									<tr>
+										<td class="footer" style="padding:0 0 10px;">
+											<table width="100%" cellpadding="0" cellspacing="0">
+												<tr class="table-holder">
+													<th class="tfoot" width="400" align="left" style="vertical-align:top; padding:0;">
+														<table width="100%" cellpadding="0" cellspacing="0">
+															<tr>
+																<td data-color="text" data-link-color="link text color" data-link-style="text-decoration:underline; color:#797c82;" class="aligncenter" style="font:12px/16px Arial, Helvetica, sans-serif; color:#797c82; padding:0 0 10px; text-align: center;">
+																	Andela, 2018. &nbsp; All Rights Reserved.
+																</td>
+															</tr>
+														</table>
+													</th>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
 			<!-- fix for gmail -->
 			<tr>
 				<td style="line-height:0;"><div style="display:none; white-space:nowrap; font:15px/1px courier;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</div></td>
