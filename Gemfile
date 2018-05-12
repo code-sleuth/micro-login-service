@@ -50,7 +50,9 @@ end
 # Use pg as the database for Active Record
 gem 'pg'
 
-gem "pundit"
+gem 'sass-rails'
+gem 'uglifier'
+gem 'coffee-rails'
 
 gem 'jwt'
 

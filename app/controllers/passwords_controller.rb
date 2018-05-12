@@ -6,7 +6,7 @@ class PasswordsController < ApplicationController
 
     if user.present? && user.confirmed_at?
       user.generate_confirmation_instructions
-      generate_and_send_token_to(user)
+      generate_and_send_token_to(user, 'forgot')
       json_response(status: Message.success)
     else
       json_response({error: Message.not_found}, :not_found)

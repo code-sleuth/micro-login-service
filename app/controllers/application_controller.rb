@@ -34,11 +34,15 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def generate_and_send_token_to(user)
+  def generate_and_send_token_to(user, type='invitation')
     token = user.confirmation_token
     user.confirmation_token = Digest::SHA512.hexdigest(token)
     user.save
-    UserMailer.with(user: user, token: token).invitation_mail.deliver_later
+    if type == 'forgot'
+      UserMailer.with(user: user, token: token).forgot_mail.deliver_later
+    else
+      UserMailer.with(user: user, token: token).invitation_mail.deliver_later
+    end
     token
   end
 end
