@@ -1,43 +1,37 @@
 class PasswordsController < ApplicationController
+  include PasswordsHelper
   def forgot
-
-    if params[:email].blank?
-      json_response({error: "email not present"}, :bad_request)
-    end
-
-    email = params[:email]
-    user = User.find_by_email(email.to_s.downcase)
+    check_email_presence
+    user = User.find_by_email(user_params[:email].to_s.downcase)
 
     if user.present? && user.confirmed_at?
       user.generate_confirmation_instructions
       generate_and_send_token_to(user)
-      json_response(status: 'ok')
+      json_response(status: Message.success)
     else
-      json_response({error: 'Account not found. Please check and try again'},
-         :not_found)
+      json_response({error: Message.not_found}, :not_found)
     end
   end
 
   def reset
-    token = params[:token]
-
-    if params[:email].blank?
-      json_response({error: 'Bad link'}, :bad_request)
-    end
-
+    check_email_presence
     user = User.find_by_email(params[:email])
 
-    if user.present? && user.confirmation_token_valid?(token)
-
-      if user.reset_password!(params[:password])
-        user.mark_as_confirmed!
-        json_response({status: 'ok'})
-      else
-        json_response({error: user.errors.full_messages}, :unprocessable_entity)
-      end
-
+    if user.present? && user.confirmation_token_valid?(user_params[:token])
+      check_passwords_match user
     else
-      json_response({error: 'Link not valid or expired.'}, :not_found)
+      json_response({error: Message.invalid_token}, :not_found)
     end
+  end
+
+
+  private
+  def user_params
+    params.permit(
+      :email,
+      :password,
+      :password_confirmation,
+      :token
+      )
   end
 end

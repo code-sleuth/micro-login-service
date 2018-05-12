@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::API
-  require 'jsonwebtoken'
+  require 'json_web_token'
   include Response
   include ExceptionHandler
 

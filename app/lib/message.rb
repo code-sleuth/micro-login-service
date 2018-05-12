@@ -1,0 +1,46 @@
+class Message
+  def self.not_found(record = 'record')
+    "Sorry #{record} not found"
+  end
+
+  def self.invalid_token
+    "'Link not valid or expired."
+  end
+
+  def self.unauthorized
+    "Unauthorized"
+  end
+
+  def self.expired_token
+    'Sorry, your token has expired. Please login to continue.'
+  end
+
+  def self.not_present
+    "email not present"
+  end
+
+  def self.do_not_match
+    "passwords do not match. please try again"
+  end
+
+  def self.fake_role
+    "Role doesn't exist"
+  end
+
+  def self.success
+    'ok'
+  end
+
+  def self.not_verified
+    "Email not Verified"
+  end
+
+  def self.invalid_credentials
+    "Invalid Credentials"
+  end
+
+  def self.invalid_input
+    "Invalid input"
+  end
+
+end

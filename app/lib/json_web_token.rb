@@ -4,7 +4,8 @@ class JsonWebToken
   @rsa_private = OpenSSL::PKey::RSA.generate 2048
   @rsa_public = @rsa_private.public_key
 
-  def self.encode(payload)
+  def self.encode(payload, exp = 24.hours.from_now)
+    payload[:exp] = exp.to_i
     payload.reverse_merge!(meta)
     JWT.encode payload, @rsa_private, 'RS256'
   end
