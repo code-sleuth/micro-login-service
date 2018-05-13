@@ -4,7 +4,7 @@ class Message
   end
 
   def self.invalid_token
-    "'Link not valid or expired."
+    "Link not valid or expired."
   end
 
   def self.unauthorized
@@ -31,6 +31,10 @@ class Message
     'ok'
   end
 
+  def self.email_send
+    'A link has been sent. Please check your email'
+  end
+
   def self.not_verified
     "Email not Verified"
   end
@@ -41,6 +45,10 @@ class Message
 
   def self.invalid_input
     "Invalid input"
+  end
+
+  def self.not_strong
+    "Password must be 6 or more characters"
   end
 
 end

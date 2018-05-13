@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   require 'json_web_token'
+  include GenerateToken
   include Response
   include ExceptionHandler
 
@@ -32,17 +33,5 @@ class ApplicationController < ActionController::API
     if selected_user.roles.exists?(name: 'admin')
       @current_user = selected_user
     end
-  end
-
-  def generate_and_send_token_to(user, type='invitation')
-    token = user.confirmation_token
-    user.confirmation_token = Digest::SHA512.hexdigest(token)
-    user.save
-    if type == 'forgot'
-      UserMailer.with(user: user, token: token).forgot_mail.deliver_later
-    else
-      UserMailer.with(user: user, token: token).invitation_mail.deliver_later
-    end
-    token
   end
 end
