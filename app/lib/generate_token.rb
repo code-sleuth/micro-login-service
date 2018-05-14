@@ -1,6 +1,6 @@
 module GenerateToken
 
-def self.generate_and_send_token_to(user, type='invitation')
+  def self.generate_and_send_token_to(user, type='invitation')
     token = user.confirmation_token
     user.confirmation_token = Digest::SHA512.hexdigest(token)
     user.save

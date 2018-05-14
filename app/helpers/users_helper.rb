@@ -41,9 +41,13 @@ module UsersHelper
 
   def generate_user_token(user)
     redirect_unconfirmed(user)
-    auth_token = JsonWebToken.encode({ user_id: user.id,
+    auth_token = JsonWebToken.encode({
+        UserInfo: {
+        user_id: user.id,
         email: user.email,
-        role: user.roles,
+        roles: user.roles.pluck(:name),
+        domain:user.roles.pluck(:domain)
+        }
       })
     json_response(auth_token: auth_token)
   end
@@ -58,7 +62,7 @@ module UsersHelper
   def generate_google_token(user, url="")
     redirect_unconfirmed(user)
     auth_token = JsonWebToken.encode(user_data(user))
-    redirect_to(url+"?token=#{auth_token}") and return
+    redirect_to(url) and return
   end
 
   def redirect_unconfirmed(user)
@@ -72,12 +76,15 @@ module UsersHelper
   def user_data(user)
     data = request.env["omniauth.auth"][:info]
     {
-      first_name: data[:first_name],
-      last_name: data[:last_name],
-      email: data[:email],
-      image: data[:image],
-      role: user.roles,
-      user_id: user.id
+      UserInfo: {
+        first_name: data[:first_name],
+        last_name: data[:last_name],
+        email: data[:email],
+        image: data[:image],
+        roles: user.roles.pluck(:name),
+        domain:user.roles.pluck(:domain),
+        user_id: user.id
+      }
     }
   end
 end

@@ -57,6 +57,14 @@ class UsersController < ApplicationController
     end
   end
 
+  def generate_access_token
+    token = @current_user.generate_access_token
+    UserMailer.
+      with(user: @current_user, access_token: token).
+      notify_access_token.deliver_later
+    json_response(message: "Please check your email for an access token")
+  end
+
   private
 
   def user_params

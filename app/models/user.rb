@@ -41,4 +41,10 @@ class User < ApplicationRecord
     save!
   end
 
+  def generate_access_token
+    access_token = SecureRandom.hex(64).to_s
+    self.access_token = Digest::SHA512.hexdigest(access_token)
+    save!
+    access_token
+  end
 end

@@ -29,7 +29,7 @@ class ApplicationController < ActionController::API
   end
 
   def load_current_user!
-    selected_user = User.find_by_email(payload[0]['email'])
+    selected_user = User.find_by_email(payload[0]['UserInfo']['email'])
     if selected_user.roles.exists?(name: 'admin')
       @current_user = selected_user
     end
