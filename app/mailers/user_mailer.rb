@@ -11,6 +11,6 @@ class UserMailer < ApplicationMailer
         @user = params[:user]
         token = params[:token]
         @url = "http://localhost:3000/invites?token=#{token}"
-        mail(to: @user.email, subject:'Reset Password')
+        mail(to: @user.email, subject:'Setup Password')
     end
 end

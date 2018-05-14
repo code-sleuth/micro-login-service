@@ -28,7 +28,7 @@ class Message
   end
 
   def self.success
-    'ok'
+    'Success'
   end
 
   def self.email_send

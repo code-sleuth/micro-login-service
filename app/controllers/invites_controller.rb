@@ -19,6 +19,7 @@ class InvitesController < ActionController::Base
     reset = Reset.new
     @response = reset.resetPassword(params)
     @token = params[:token]
+    @show_form = true
     render "index"
   end
 

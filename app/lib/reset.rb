@@ -1,7 +1,6 @@
-
+require 'generate_token'
 class Reset
   include ResetResponse
-  include GenerateToken
 
   def attempt_to_db(user, user_params)
     if user.reset_password!(user_params[:password])
@@ -40,9 +39,9 @@ class Reset
     check_email_presence(user_params)
     user = User.find_by_email(user_params[:email].to_s.downcase)
 
-    if user.present? && user.confirmed_at?
+    if user.present?
       user.generate_confirmation_instructions
-      generate_and_send_token_to(user, 'forgot')
+      GenerateToken.generate_and_send_token_to(user, 'forgot')
       reset_response(linkSent: Message.email_send)
     else
       reset_response({error: Message.not_found}, :not_found)

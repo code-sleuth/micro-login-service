@@ -1,3 +1,4 @@
+require 'generate_token'
 module UsersHelper
 
   def role_exists?
@@ -28,7 +29,7 @@ module UsersHelper
       begin
         user.save!
         set_role(user)
-        generate_and_send_token_to(user)
+        GenerateToken.generate_and_send_token_to(user)
         response[:created] << email
       rescue
         response[:skiped] << email
@@ -39,14 +40,44 @@ module UsersHelper
   end
 
   def generate_user_token(user)
-    if user.confirmed_at?
-      auth_token = JsonWebToken.encode({ user_id: user.id,
+    redirect_unconfirmed(user)
+    auth_token = JsonWebToken.encode({ user_id: user.id,
         email: user.email,
         role: user.roles,
       })
-      json_response(auth_token: auth_token)
-    else
-      json_response({ error: Message.not_verified }, :unauthorized)
+    json_response(auth_token: auth_token)
+  end
+
+  def andela_mail?
+    domain = request.env["omniauth.auth"][:info][:email].split('@').second
+    if domain == 'andela.com'
+      true
     end
+  end
+
+  def generate_google_token(user, url="")
+    redirect_unconfirmed(user)
+    auth_token = JsonWebToken.encode(user_data(user))
+    redirect_to(url+"?token=#{auth_token}") and return
+  end
+
+  def redirect_unconfirmed(user)
+    if user.confirmed_at?
+      true
+    else
+      json_response({ error: Message.not_verified }, :unauthorized) and return
+    end
+  end
+
+  def user_data(user)
+    data = request.env["omniauth.auth"][:info]
+    {
+      first_name: data[:first_name],
+      last_name: data[:last_name],
+      email: data[:email],
+      image: data[:image],
+      role: user.roles,
+      user_id: user.id
+    }
   end
 end
