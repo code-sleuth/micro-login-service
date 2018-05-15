@@ -18,7 +18,10 @@ jobs:
 
     steps:
       - checkout
-
+      - run:
+          name: list files
+          command: |
+            ls
       # Download and cache dependencies
       - restore_cache:
           keys:
