@@ -8,6 +8,18 @@ jobs:
     docker:
       # specify the version you desire here
        - image: circleci/ruby:2.4.1-node-browsers
+         environment:
+            - VOF_PATH: /home/circleci/repo
+            - PG_HOST: localhost
+            - PGUSER: circleci
+            - RAILS_ENV: test
+            - DATABASE_URL: postgresql://circleci@localhost/circlecidb
+       - image: postgres:9.6
+         environment:
+            - POSTGRES_USER: circleci
+            - POSTGRES_DB: circlecidb
+            - POSTGRES_PASSWORD: ''
+
     working_directory: ~/repo
 
     steps:
@@ -29,6 +41,9 @@ jobs:
           paths:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
+     # Wait for DB
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
         
       # Database setup
       - run: bundle exec rake db:create
