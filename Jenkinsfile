@@ -2,6 +2,7 @@ pipeline {
     agent { 
         dockerfile {
             filename 'Jenkins.Dockerfile'
+            args '-v /etc/passwd:/etc/passwd -v /etc/group:/etc/group'
         }  
     }
     environment {
