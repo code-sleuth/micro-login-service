@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 su postrges
 sed -i 's/peer/trust/g' /etc/postgresql/9.5/main/pg_hba.conf
