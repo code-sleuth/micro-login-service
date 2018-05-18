@@ -43,7 +43,6 @@ pipeline {
         stage('Test'){
             steps {
                 echo 'testing'
-                sh '#!/bin/bash \n '+
                 sh 'bundle exec rspec spec'
             }
         }
