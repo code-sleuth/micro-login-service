@@ -21,7 +21,6 @@ pipeline {
         SERVICE_ACCOUNT_EMAIL=credentials("SERVICE_ACCOUNT_EMAIL")
         VOF_INFRASTRUCTURE_REPO=credentials("VOF_INFRASTRUCTURE_REPO")
         GCLOUD_VOF_BUCKET=credentials("GCLOUD_VOF_BUCKET")
-        GCLOUD_VOF_BUCKET=credentials("GCLOUD_VOF_BUCKET")
         SLACK_CHANNEL=credentials("SLACK_CHANNEL")
         SLACK_CHANNEL_HOOK=credentials("SLACK_CHANNEL_HOOK")
         BUGSNAG_KEY=credentials("BUGSNAG_KEY")
