@@ -2,7 +2,8 @@ pipeline {
     agent { 
         dockerfile {
             filename 'Jenkins.Dockerfile'
-            args '-v /etc/passwd:/etc/passwd -v /etc/group:/etc/group'
+            args '-u 0:0' //Forces Container tu run as User Root                    
+            reuseNode true
         }  
     }
     environment {
