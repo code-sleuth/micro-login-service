@@ -2,6 +2,7 @@ class UserMailer < ApplicationMailer
   def invitation_mail
     @user = params[:user]
     token = params[:token]
+    @invite_domain = @user.roles.pluck(:domain).last
     @url =
       "#{ActionMailer::Base.default_url_options[:host]}/invites?token=#{token}"
     mail(to: @user.email, subject: "Invitation To Join Platform")
