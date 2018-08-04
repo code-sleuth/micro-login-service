@@ -8,22 +8,23 @@ USER root
 
 # set working directory
 RUN apt-get -y update && apt-get install postgresql postgresql-contrib nodejs sudo -y && apt-get upgrade -y && \
-/etc/init.d/postgresql start
+    /etc/init.d/postgresql start
 
 RUN apt-get install -y --no-install-recommends apt-utils
 
 RUN useradd jenkins --shell /bin/bash --create-home && \
-echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers && \
-usermod -u 113 jenkins
+    adduser jenkins sudo \
+    passwd -d jenkins \
+    usermod -u 113 jenkins
 
 RUN mkdir -p ~/workdir && \
-apt-get install unzip && \
-cd ~/workdir && \
-wget https://releases.hashicorp.com/terraform/0.10.6/terraform_0.10.6_linux_amd64.zip && \
-unzip terraform_0.10.6_linux_amd64.zip && \
-chmod +x terraform && \
-mv terraform /usr/local/bin/ && \
-rm -r ~/workdir
+    apt-get install unzip && \
+    cd ~/workdir && \
+    wget https://releases.hashicorp.com/terraform/0.10.6/terraform_0.10.6_linux_amd64.zip && \
+    unzip terraform_0.10.6_linux_amd64.zip && \
+    chmod +x terraform && \
+    mv terraform /usr/local/bin/ && \
+    rm -r ~/workdir
 
 # Let's start with some basic stuff.
 RUN apt-get update -qq && apt-get install -qqy \
