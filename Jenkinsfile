@@ -36,6 +36,14 @@ pipeline {
         PRIVATE_KEY=credentials("PRIVATE_KEY")
     }
     stages {
+        stage('CleanUp') {
+            steps {
+                echo 'Delete dangling images'
+                sh 'sudo gpasswd -a jenkins docker'
+                sh 'sudo chmod 777 /var/run/docker.sock'
+                sh 'docker system prune -f'
+            }
+        }
         stage('Build') {
             steps {
                 sh 'chmod 777 ./jenkins_ci/jenkins_scripts/pg-setup.sh'
