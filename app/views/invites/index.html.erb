@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta name="viewport" content="width=device-width,height=device-height initial-scale=1">
+      <%= favicon_link_tag 'favicon.ico' %>
+      <title>Andela - Guest Service</title>
+      <%= csrf_meta_tags %>
+      <%= csp_meta_tag %>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.0/css/mdb.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.0/js/mdb.min.js"></script>
+      <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+      <style>
+         html,
+         body{
+         background-color: #f4f8f9;
+         text-align: center;
+         }
+         #message {
+         <% if @response %>
+         color: <% if @response[:json][:linkSent].blank? %>
+         #F44336;
+         <%else%>
+         #34D027;
+         <%end%>
+         <% end %>
+         padding: 1em;
+         text-align:center;
+         font-size: 12px;
+         font-family: sans-serif;
+         font-weight: 100;
+         margin-top: 3em;
+         }
+         .myForm {
+         display: inline-block;
+         margin: 0 auto;
+         transform: translateY(50%);
+         width: 35rem;
+         padding: 4.4rem;
+         border-radius: 4px;
+         background-color: #fff;
+         text-align: left;
+         }
+         .form-control {
+         margin-bottom: 15px !important;
+         }
+         .btn-indigo {
+         float: right;
+         margin: 0;
+         width: 100%;
+         background-color: #3459db !important;
+         }
+         .brand {
+         height: 30px;
+         }
+         .main-container {
+         float: left;
+         position: relative;
+         left: 50%;
+         }
+         .fixer-container {
+         float: left;
+         position: relative;
+         left: -50%;
+         }
+         label {
+         font-size: 12px !important;
+         }
+      </style>
+   </head>
+   <body>
+      <%= render("layouts/header") %>
+      <% if @show_form %>
+      <%= form_with url: invites_path, class: "myForm" do |form| %>
+      <div class="main-container">
+         <div class="fixer-container"><%= image_tag "logo2.png", class: "brand", alt:"logo"%>
+            Andela Guest Service
+         </div>
+      </div>
+      <div id='message'>
+         <% if @response %>
+         <div><%= @response[:json][:error] %></div>
+         <div><%= @response[:json][:linkSent] %></div>
+         <div><%= @response[:json][:status] %></div>
+         <% end %>
+      </div>
+      <%= form.label :password, "New password", class: "grey-text"%>
+      <%= form.text_field :password, class:"form-control", type: "password", :required => true %>
+      <%= form.label :password_confirmation, "Confirm password", class: "grey-text"%>
+      <%= form.text_field :password_confirmation, class:"form-control", type: "password", :required => true %>
+      <% if @token.blank? %>
+      <%= hidden_field_tag :token, params[:token] %>
+      <% else %>
+      <%= hidden_field_tag :token, @token %>
+      <% end %>
+      <%= form.submit "Submit", class:"btn btn-indigo" %>
+      <% end %>
+      <% else %>
+      <%= form_with url: invites_path, class: "myForm" do |form| %>
+      <div class="main-container">
+         <div class="fixer-container"><%= image_tag "logo2.png", class: "brand", alt:"logo"%>
+            Andela Guest Service
+         </div>
+      </div>
+      <div id='message'>
+         <% if @response %>
+         <div><%= @response[:json][:error] %></div>
+         <div><%= @response[:json][:linkSent] %></div>
+         <div><%= @response[:json][:status] %></div>
+         <% end %>
+      </div>
+      <%= form.label :email, "Email address", class: "grey-text"%>
+      <%= form.text_field :email, class:"form-control", type: "email", :required => true %>
+      <%= hidden_field_tag :broken, true %>
+      <%= form.submit "Submit", class:"btn btn-indigo" %>
+      <% end %>
+      <%end%>
+      <%= render("layouts/footer") %>
+   </body>
+</html>

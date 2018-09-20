@@ -1,0 +1,110 @@
+version: 2.0
+
+defaults: &defaults
+  docker:
+      - image: circleci/ruby:2.4.1-jessie-node
+        environment:
+          - BUNDLE_JOBS: 3
+          - BUNDLE_RETRY: 3
+          - BUNDLE_PATH: vendor/bundle
+          - PGHOST: 127.0.0.1
+          - PGUSER: circleci
+          - RAILS_ENV: test
+          - DATABASE_URL: postgresql://circleci@localhost/circlecidb
+          - CC_TEST_REPORTER_ID: ${CC_TEST_REPORTER_ID}
+      - image: circleci/postgres:9.5-alpine # database image
+        environment: # environment variables for database
+          - POSTGRES_USER: circleci
+          - POSTGRES_DB: circlecidb
+          - POSTGRES_PASSWORD: ""
+  working_directory: ~/MICRO-LOGIN-SERVICE
+
+jobs:
+  checkout_code:
+    <<: *defaults
+    steps:
+      - checkout
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/MICRO-LOGIN-SERVICE
+
+  bundle_dependencies:
+    <<: *defaults
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: v1-bundle-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --path vendor/bundle
+      - save_cache:
+          key: v1-bundle-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ~/MICRO-LOGIN-SERVICE/vendor/bundle
+
+  spec_test:
+    <<: *defaults
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: v1-bundle-{{ checksum "Gemfile.lock" }}
+      - run: bundle --path vendor/bundle
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Database setup
+          environment:
+            SECRET_KEY_BASE: RAILS_ENV='${RAILS_ENV}' rake secret
+          command: bin/rails db:schema:load --trace
+
+      - run:
+          name: install rspec
+          command: gem install rubocop-rspec
+
+      - run:
+          name: Run rspec in parallel
+          environment:
+            SECRET_KEY_BASE: RAILS_ENV='${RAILS_ENV}' rake secret
+          command:
+            RAILS_ENV=test bundle exec rspec 
+      
+      # Save test results for timing analysis
+      - store_test_results:
+          path: test_results
+
+  precompile_assets:
+    <<: *defaults
+    steps:
+      - restore_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          key: v1-bundle-{{ checksum "Gemfile.lock" }}
+      - run: bundle --path vendor/bundle
+            
+      - run:
+          name: Precompile assets
+          environment:
+            SECRET_KEY_BASE: RAILS_ENV='${RAILS_ENV}' rake secret
+          command: bundle exec rake assets:precompile 
+      - save_cache:
+          key: v1-assets-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/MICRO-LOGIN-SERVICE/public/assets
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - checkout_code
+      - bundle_dependencies:
+          requires:
+            - checkout_code
+      - spec_test:
+          requires:
+            - bundle_dependencies
+      - precompile_assets:
+          requires:
+            - bundle_dependencies
